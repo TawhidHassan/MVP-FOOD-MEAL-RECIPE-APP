@@ -12,15 +12,19 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FoodClient {
 
     // TODO 10 Add BASE url
-    private static final String BASE_URL = "";
+    private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";//with "/"
 
     public static Retrofit getFoodClient() {
         // TODO 11 configures Retrofit
-        return null;
+        return new Retrofit.Builder().baseUrl(BASE_URL)
+                .client(provideOkHttp())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
     private static Interceptor provideLoggingInterceptor() {

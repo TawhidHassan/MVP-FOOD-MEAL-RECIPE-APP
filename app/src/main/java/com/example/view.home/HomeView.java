@@ -6,6 +6,11 @@
  -----------------------------------------------------------------------------*/
 package com.example.view.home;
 
+import com.example.model.Categories;
+import com.example.model.Meals;
+
+import java.util.List;
+
 public interface HomeView {
     /*
      * TODO 13 Create void method
@@ -20,5 +25,10 @@ public interface HomeView {
      * 5. and, Behavior when an error occurs when requesting data to the API
      */
     // TODO 14 showLoading()
+    void showLoading();
+    void hideLoading();
+    void setMeal(List<Meals.Meal> meal);
+    void setCategory(List<Categories.Category> category);
+    void onerrorLoading(String message);
 
 }

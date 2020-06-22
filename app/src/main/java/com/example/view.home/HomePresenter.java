@@ -7,6 +7,8 @@
 package com.example.view.home;
 
 
+import android.support.annotation.NonNull;
+
 import com.example.Utils;
 import com.example.model.Categories;
 import com.example.model.Meals;
@@ -21,18 +23,22 @@ class HomePresenter {
 
     // TODO 15 Create the constructor (View)
 
+
+    public HomePresenter(HomeView view) {
+        this.view = view;
+    }
+
     void getMeals() {
         // TODO 16 do loading before making a request to the server
-
+        view.showLoading();
         // TODO 17 with the line you have made a request
         Call<Meals> mealsCall = Utils.getApi().getMeal();
-
         // TODO 19 waiting for Callback
         mealsCall.enqueue(new Callback<Meals>() {
             @Override
-            public void onResponse(Call<Meals> call, Response<Meals> response) {
+            public void onResponse(@NonNull Call<Meals> call,@NonNull Response<Meals> response) {
                 // TODO 20 Close loading when you have received a response from the server
-
+                    view.hideLoading();
                 // TODO 21 Non-empty results check & Non-empty results check
                 if (response.isSuccessful() && response.body() != null) {
                     /*
@@ -40,17 +46,17 @@ class HomePresenter {
                      * input the results obtained into the setMeals() behavior
                      * and enter response.body() to the parameter
                      */
-
+                    view.setMeal(response.body().getMeals());
 
                 }
                 else {
                     // TODO 23 Show an error message if the conditions are not met
-
+                    view.onerrorLoading(response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<Meals> call, Throwable t) {
+            public void onFailure(@NonNull Call<Meals> call,@NonNull Throwable t) {
                 /*
                  * Failure will be thrown here
                  * for this you must do
@@ -59,7 +65,9 @@ class HomePresenter {
                  */
 
                 // TODO 24 Close loading
+                view.hideLoading();
                 // TODO 25 Show an error message
+                view.onerrorLoading(t.getLocalizedMessage());
             }
         });
     }
@@ -67,14 +75,14 @@ class HomePresenter {
 
     void getCategories() {
         // TODO 26 do loading before making a request to the server
-
+            view.showLoading();
         // TODO 27 create Call<Categories> categoriesCall = ...
-        Call<Categories> categoriesCall = null;
+        Call<Categories> categoriesCall = Utils.getApi().getCategories();
 
         // TODO 28 waiting for enqueue Callback
         categoriesCall.enqueue(new Callback<Categories>() {
             @Override
-            public void onResponse(Call<Categories> call, Response<Categories> response) {
+            public void onResponse(@NonNull Call<Categories> call,@NonNull Response<Categories> response) {
                 // TODO 29 Non-empty results check & Non-empty results check
                 if (response.isSuccessful() && response.body() != null) {
                     /*
@@ -82,11 +90,12 @@ class HomePresenter {
                      * input the results obtained into the setMeals() behavior
                      * and enter response.body() to the parameter
                      */
-
+                    view.setCategory(response.body().getCategories());
 
                 }
                 else {
                     // TODO 31 Show an error message if the conditions are not met
+                    view.onerrorLoading(response.message());
 
                 }
             }
@@ -101,7 +110,9 @@ class HomePresenter {
                  */
 
                 // TODO 32 Close loading
+                view.hideLoading();
                 // TODO 33 Show an error message
+                view.onerrorLoading(t.getLocalizedMessage());
             }
         });
     }
